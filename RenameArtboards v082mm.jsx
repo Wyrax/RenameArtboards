@@ -1,4 +1,5 @@
-﻿$.writeln('--start--');
+﻿//GitHub version
+$.writeln('--start--');
 
 var doc = app.activeDocument;
 var allRange = doc.artboards.length;
