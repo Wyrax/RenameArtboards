@@ -10,4 +10,5 @@ Script will rename existing artboards using file name and different suffixes via
 - File name + dimensions in pixels
 
 Renaming can be applied to all artboards or to the range.
+
 Range can be specified by multiple dashes, e.g.  1, 3-5-7, 11, 14-17
