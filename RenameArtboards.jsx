@@ -1,77 +1,98 @@
-﻿//Rename Artboards for Adobe Illustrator, v. 0.83mm
+﻿//Rename Artboards for Adobe Illustrator CC/2020, v. 0.83mm
 //$.writeln('--start--');
+var docName; //try move under IF hood
+//add delimiter var
 
-//here will be document check
+if (app.documents.length > 0)
+{
+    var versionNumber = 'Version 0.85';
+    var doc = app.activeDocument;
+    //filename var
+    var allRange = doc.artboards.length;
+    var rangeInputText = '1-'+allRange;
 
-var doc = app.activeDocument;
-var allRange = doc.artboards.length;
-var rangeInputText = '1-'+allRange;
-//$.writeln('allRange: '+allRange);
-//$.writeln('rangeInputText: '+rangeInputText);
+    var promptWindow = new Window('dialog', 'Rename Artboards Options:');
+    //promptWindow.location = [250,250];
+    //promptWindow.size = [1000,1200];
+    //[startX, StartY, EndX, EndY]
 
-var promptWindow = new Window('dialog', 'Rename Artboards Options:');
-//promptWindow.location = [250,250];
-//promptWindow.size = [1000,1200];
-//[startX, StartY, EndX, EndY]
-promptWindow.renamingMethod = promptWindow.add('group', undefined, 'Renaming Method:');
-promptWindow.renamingMethod.orientation='column';
+    promptWindow.includeFileName = promptWindow.add('group', undefined, '');
+    promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [25,25,235,39], 'Include file name');
+    promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.'; 
+    promptWindow.includeFileName.fileNameCheckbox.value = true;
+    promptWindow.includeFileName.orientation='column';
 
-promptWindow.renamingMethod.renameSame = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'All the same');
-promptWindow.renamingMethod.renameSame.helpTip = "Rename all artboards\nthe same as file name.";
-promptWindow.renamingMethod.renameNameNumber = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Number');
-promptWindow.renamingMethod.renameNameNumber.helpTip = "Rename all artboards\nusing numeration.";
-promptWindow.renamingMethod.renameNameMms = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Millimeters');
-promptWindow.renamingMethod.renameNameMms.helpTip = "Rename all artboards\nand add dimensions\n(in millimeters).";
-promptWindow.renamingMethod.renameNamePxs = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Pixels');
-promptWindow.renamingMethod.renameNamePxs.helpTip = "Rename all artboards\nand add dimensions\n(in pixels).";
-promptWindow.renamingMethod.renameNameMms.value = true;
+    promptWindow.renamingMethod = promptWindow.add('group', undefined, 'Renaming Method:');
+    promptWindow.renamingMethod.orientation='column';
+    promptWindow.renamingMethod.renameSame = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'All the same');
+    promptWindow.renamingMethod.renameSame.helpTip = 'Rename all artboards\nthe same as file name.';
+    promptWindow.renamingMethod.renameNameNumber = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Number');
+    promptWindow.renamingMethod.renameNameNumber.helpTip = 'Rename all artboards\nusing numeration.';
+    promptWindow.renamingMethod.renameNameMms = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Millimeters');
+    promptWindow.renamingMethod.renameNameMms.helpTip = 'Rename all artboards\nand add dimensions\n(in millimeters).';
+    promptWindow.renamingMethod.renameNamePxs = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Pixels');
+    promptWindow.renamingMethod.renameNamePxs.helpTip = 'Rename all artboards\nand add dimensions\n(in pixels).';
+    promptWindow.renamingMethod.renameNameMms.value = true;
 
-//Applied Range
-promptWindow.range = promptWindow.add('panel', undefined, 'Range of artboards:');
-promptWindow.range.helpTip = "Specify ranges by hyphen\nor separate artboards by commas."; 
-promptWindow.range.orientation='row';
-promptWindow.range.selectAll = promptWindow.range.add('radiobutton', [15,15,65,35], 'All');
-promptWindow.range.selectAll.helpTip = "Rename all artboards.";
-promptWindow.range.selectRange = promptWindow.range.add('radiobutton', [15,15,75,35], 'Range:');
-promptWindow.range.selectRange.helpTip = "Rename chosen artboards.\nSpecify ranges by hyphen\nor separate artboards by commas.";
-promptWindow.range.rangeInput = promptWindow.range.add('edittext', [15,15,160,35], rangeInputText);
-promptWindow.range.helpTip = "Specify ranges by hyphen\nor separate artboards by commas.";
-promptWindow.range.selectAll.value = true;
-promptWindow.range.rangeInput.onActivate = function() {
-    promptWindow.range.selectRange.value = true;
-};
+    //Applied Range
+    promptWindow.range = promptWindow.add('panel', undefined, 'Range of artboards:');
+    promptWindow.range.helpTip = 'Specify ranges by hyphen\nor separate artboards by commas.'; 
+    promptWindow.range.orientation='row';
+    promptWindow.range.selectAll = promptWindow.range.add('radiobutton', [15,15,65,35], 'All');
+    promptWindow.range.selectAll.helpTip = 'Rename all artboards.';
+    promptWindow.range.selectRange = promptWindow.range.add('radiobutton', [15,15,75,35], 'Range:');
+    promptWindow.range.selectRange.helpTip = 'Rename chosen artboards.\nSpecify ranges by hyphen\nor separate artboards by commas.';
+    promptWindow.range.rangeInput = promptWindow.range.add('edittext', [15,15,160,35], rangeInputText);
+    promptWindow.range.helpTip = 'Specify ranges by hyphen\nor separate artboards by commas.';
+    promptWindow.range.selectAll.value = true;
+    promptWindow.range.rangeInput.onActivate = function() {
+        promptWindow.range.selectRange.value = true;
+    };
 
-// Checkboxes
-promptWindow.additionalOptions = promptWindow.add('group', undefined, '');
-promptWindow.additionalOptions.orientation='column';
+    promptWindow.version = promptWindow.add('statictext', undefined, versionNumber);
+    promptWindow.version.helpTip = 'copyleft';
 
-promptWindow.version = promptWindow.add('statictext', undefined, 'Version 0.83');
-promptWindow.version.helpTip = "copyleft";
+    promptWindow.confirmation = promptWindow.add('group', undefined, 'Rename confirmation');
+    promptWindow.confirmation.orientation='row';
+    promptWindow.confirmation.cancelButton = promptWindow.confirmation.add('button', undefined, 'Cancel', {name:'cancel'});
+    promptWindow.confirmation.renameButton = promptWindow.confirmation.add('button', undefined, 'Rename', {name:'ok'});
 
-promptWindow.confirmation = promptWindow.add('group', undefined, 'Rename confirmation');
-promptWindow.confirmation.orientation='row';
-promptWindow.confirmation.cancelButton = promptWindow.confirmation.add('button', undefined, 'Cancel', {name:'cancel'});
-promptWindow.confirmation.renameButton = promptWindow.confirmation.add('button', undefined, 'Rename', {name:'ok'});
+    promptWindow.confirmation.cancelButton.onClick = doNothing;
+    promptWindow.confirmation.renameButton.onClick = applyMethod;
+    promptWindow.show();
 
-promptWindow.confirmation.cancelButton.onClick = doNothing;
-promptWindow.confirmation.renameButton.onClick = applyMethod;
-promptWindow.show();
+    //$.writeln('---end---');
 
-//$.writeln('---end---');
+    
+
+} else {
+    alert('Open document first.');
+}
 
 function doNothing() {
     //$.writeln('Renaming is cancelled');
     promptWindow.hide();
 };
 
+function setDocName() {
+    var prefixName;
+    if (promptWindow.includeFileName.fileNameCheckbox.value) {
+        prefixName = doc.name;
+        prefixName = prefixName.replace(/\..+$/, '');
+        return prefixName;
+    } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameSame.value) {
+        prefixName = 'My name is Legion, for we are many >:)';
+        return prefixName;
+    } else {
+        prefixName = '';
+        return prefixName;
+    }
+}
+
 function applyMethod() {
-    var docName = doc.name;
-    docName = docName.replace(/\..+$/, '');
+    docName = setDocName();
     //$.writeln('File name: '+docName);
-    
-    //$.writeln('range-field-value: '+promptWindow.range.rangeInput.text);
     commaArray = promptWindow.range.rangeInput.text.split(',');
-    //$.writeln('commaArray: '+commaArray);
     var unpackedRangeArray = [];
 
     if (promptWindow.range.selectRange.value) {
