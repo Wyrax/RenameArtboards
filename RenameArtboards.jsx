@@ -1,13 +1,12 @@
-﻿//Rename Artboards for Adobe Illustrator CC/2020, v. 0.83mm
+﻿//Rename Artboards for Adobe Illustrator CC/2020
 //$.writeln('--start--');
 var docName; //try move under IF hood
-//add delimiter var
+var delimiter;
 
 if (app.documents.length > 0)
 {
-    var versionNumber = 'Version 0.85';
+    var versionNumber = 'Version 0.86';
     var doc = app.activeDocument;
-    //filename var
     var allRange = doc.artboards.length;
     var rangeInputText = '1-'+allRange;
 
@@ -16,21 +15,21 @@ if (app.documents.length > 0)
     //promptWindow.size = [1000,1200];
     //[startX, StartY, EndX, EndY]
 
-    promptWindow.includeFileName = promptWindow.add('group', undefined, '');
-    promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [25,25,235,39], 'Include file name');
+    promptWindow.includeFileName = promptWindow.add('panel', undefined, 'Filename:');
+    promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [20,20,170,39], 'Include file name');
     promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.'; 
     promptWindow.includeFileName.fileNameCheckbox.value = true;
     promptWindow.includeFileName.orientation='column';
 
-    promptWindow.renamingMethod = promptWindow.add('group', undefined, 'Renaming Method:');
+    promptWindow.renamingMethod = promptWindow.add('panel', undefined, 'Renaming Method:');
     promptWindow.renamingMethod.orientation='column';
-    promptWindow.renamingMethod.renameSame = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'All the same');
+    promptWindow.renamingMethod.renameSame = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'All the same');
     promptWindow.renamingMethod.renameSame.helpTip = 'Rename all artboards\nthe same as file name.';
-    promptWindow.renamingMethod.renameNameNumber = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Number');
+    promptWindow.renamingMethod.renameNameNumber = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'Add number');
     promptWindow.renamingMethod.renameNameNumber.helpTip = 'Rename all artboards\nusing numeration.';
-    promptWindow.renamingMethod.renameNameMms = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Millimeters');
+    promptWindow.renamingMethod.renameNameMms = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'Add size in millimeters');
     promptWindow.renamingMethod.renameNameMms.helpTip = 'Rename all artboards\nand add dimensions\n(in millimeters).';
-    promptWindow.renamingMethod.renameNamePxs = promptWindow.renamingMethod.add('radiobutton', [20,20,150,35], 'Name+Pixels');
+    promptWindow.renamingMethod.renameNamePxs = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'Add size in pixels');
     promptWindow.renamingMethod.renameNamePxs.helpTip = 'Rename all artboards\nand add dimensions\n(in pixels).';
     promptWindow.renamingMethod.renameNameMms.value = true;
 
@@ -79,12 +78,15 @@ function setDocName() {
     if (promptWindow.includeFileName.fileNameCheckbox.value) {
         prefixName = doc.name;
         prefixName = prefixName.replace(/\..+$/, '');
+        delimiter = '--';
         return prefixName;
     } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameSame.value) {
         prefixName = 'My name is Legion, for we are many >:)';
+        delimiter = '--';
         return prefixName;
     } else {
         prefixName = '';
+        delimiter = '';
         return prefixName;
     }
 }
@@ -131,7 +133,7 @@ function applyMethod() {
         //$.writeln('Method: name+number');
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
-            doc.artboards[index].name = docName+'-'+(index+1);
+            doc.artboards[index].name = docName+delimiter+(index+1);
             };
         };
     if (promptWindow.renamingMethod.renameNameMms.value) {
@@ -143,7 +145,7 @@ function applyMethod() {
             var heightPts = (rectArray[3] - rectArray[1]) * -1;
             var widthMms = Math.round(new UnitValue(widthPts, 'pt').as('mm'));
             var heightMms = Math.round(new UnitValue(heightPts, 'pt').as('mm'));
-            doc.artboards[index].name = docName+'-'+widthMms+'x'+heightMms+'mm';
+            doc.artboards[index].name = docName+delimiter+widthMms+'x'+heightMms+'mm';
             };
         };
     if (promptWindow.renamingMethod.renameNamePxs.value) {
@@ -156,7 +158,7 @@ function applyMethod() {
             var heightPts = (rectArray[3] - rectArray[1]) * -1;
             var widthPxs = Math.round(new UnitValue(widthPts, 'pt').as('px'));
             var heightPxs = Math.round(new UnitValue(heightPts, 'pt').as('px'));
-            doc.artboards[index].name = docName+'-'+widthPxs+'x'+heightPxs+'px';
+            doc.artboards[index].name = docName+delimiter+widthPxs+'x'+heightPxs+'px';
             };
         };
     promptWindow.hide();
