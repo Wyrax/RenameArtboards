@@ -78,11 +78,11 @@ function setDocName() {
     if (promptWindow.includeFileName.fileNameCheckbox.value) {
         prefixName = doc.name;
         prefixName = prefixName.replace(/\..+$/, '');
-        delimiter = '--';
+        delimiter = '-';
         return prefixName;
     } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameSame.value) {
         prefixName = 'My name is Legion, for we are many >:)';
-        delimiter = '--';
+        delimiter = '-';
         return prefixName;
     } else {
         prefixName = '';
