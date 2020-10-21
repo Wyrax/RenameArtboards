@@ -1,13 +1,12 @@
 ﻿//Rename Artboards for Adobe Illustrator CC/2020
 
-var doc = app.activeDocument;
-var docName;
-var delimiter;
-
 if (app.documents.length == 0) {
     alert('Open document first.');
 } else {
-    var versionNumber = 'Version 0.87';
+    var versionNumber = 'Version 0.88';
+    var doc = app.activeDocument;
+    var docName;
+    var delimiter;
     var allRange = doc.artboards.length;
     var rangeInputText = '1-'+allRange;
     var promptWindow = new Window('dialog', 'Rename Artboards Options:');
@@ -85,13 +84,13 @@ function setDocName() {
 
 function applyMethod() {
     docName = setDocName();
-    commaArray = promptWindow.range.rangeInput.text.split(',');
+    var commaArray = promptWindow.range.rangeInput.text.split(',');
     var unpackedRangeArray = [];
 
     if (promptWindow.range.selectRange.value) {
         for (var i = 0; i < commaArray.length; i++) {
             if (commaArray[i].indexOf('-') > -1) {
-                rangeMinMax = commaArray[i].split('-');
+                var rangeMinMax = commaArray[i].split('-');
                 for (var j = parseInt(rangeMinMax[0]); j <= parseInt(rangeMinMax[rangeMinMax.length-1]); j++) {
                     unpackedRangeArray.push(j-1);
                 };
@@ -141,27 +140,3 @@ function applyMethod() {
         };
     promptWindow.hide();
 };
-
-function printVariables(where, line) {
-    $.writeln('snapshot of variables at the location: '+where);
-    $.writeln('snapshot of variables at the line: '+line);
-    $.writeln('doc = '+doc);
-    $.writeln('docName = '+docName);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('versionNumber = '+versionNumber);
-    $.writeln('allRange = '+allRange);
-    $.writeln('rangeInputText = '+rangeInputText);
-    $.writeln('promptWindow = '+promptWindow);
-    $.writeln('prefixName = '+prefixName);
-    $.writeln('commaArray = '+commaArray);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-    $.writeln('delimiter = '+delimiter);
-}
