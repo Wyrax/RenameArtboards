@@ -1,15 +1,15 @@
 ﻿//Rename Artboards for Adobe Illustrator CC/2020
-//$.writeln('--start--');
-var docName; //try move under IF hood
+
+var doc = app.activeDocument;
+var docName;
 var delimiter;
 
-if (app.documents.length > 0)
-{
-    var versionNumber = 'Version 0.86';
-    var doc = app.activeDocument;
+if (app.documents.length == 0) {
+    alert('Open document first.');
+} else {
+    var versionNumber = 'Version 0.87';
     var allRange = doc.artboards.length;
     var rangeInputText = '1-'+allRange;
-
     var promptWindow = new Window('dialog', 'Rename Artboards Options:');
     //promptWindow.location = [250,250];
     //promptWindow.size = [1000,1200];
@@ -59,17 +59,9 @@ if (app.documents.length > 0)
     promptWindow.confirmation.cancelButton.onClick = doNothing;
     promptWindow.confirmation.renameButton.onClick = applyMethod;
     promptWindow.show();
-
-    //$.writeln('---end---');
-
-    
-
-} else {
-    alert('Open document first.');
 }
 
 function doNothing() {
-    //$.writeln('Renaming is cancelled');
     promptWindow.hide();
 };
 
@@ -93,17 +85,13 @@ function setDocName() {
 
 function applyMethod() {
     docName = setDocName();
-    //$.writeln('File name: '+docName);
     commaArray = promptWindow.range.rangeInput.text.split(',');
     var unpackedRangeArray = [];
 
     if (promptWindow.range.selectRange.value) {
         for (var i = 0; i < commaArray.length; i++) {
-            //$.writeln(commaArray[i]);
             if (commaArray[i].indexOf('-') > -1) {
                 rangeMinMax = commaArray[i].split('-');
-                //$.writeln('rangeMinMax: '+rangeMinMax);
-                //for (var j = parseInt(rangeMinMax[0]); j <= parseInt(rangeMinMax[1]); j++) {
                 for (var j = parseInt(rangeMinMax[0]); j <= parseInt(rangeMinMax[rangeMinMax.length-1]); j++) {
                     unpackedRangeArray.push(j-1);
                 };
@@ -111,33 +99,25 @@ function applyMethod() {
                 unpackedRangeArray.push(parseInt(commaArray[i])-1);
             };
         };
-        //$.writeln('Range: unpackedRangeArray: '+unpackedRangeArray);
-        for (var k in unpackedRangeArray) {
-            //$.writeln('in unpackedRangeArray#'+k+'='+unpackedRangeArray[k]+typeof unpackedRangeArray[k]);
-        };
     } else {
         for (var i = 0; i < doc.artboards.length; i++) {
             unpackedRangeArray.push(i);
         };
-        //$.writeln('ALL: unpackedRangeArray: '+unpackedRangeArray);
     };
-    
+
     if (promptWindow.renamingMethod.renameSame.value) {
-        //$.writeln('Method: all the same');
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
             doc.artboards[index].name = docName;
             };
         };
     if (promptWindow.renamingMethod.renameNameNumber.value) {
-        //$.writeln('Method: name+number');
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
             doc.artboards[index].name = docName+delimiter+(index+1);
             };
         };
     if (promptWindow.renamingMethod.renameNameMms.value) {
-        //$.writeln('Method: name+mm');
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
             var rectArray = doc.artboards[index].artboardRect;
@@ -149,8 +129,6 @@ function applyMethod() {
             };
         };
     if (promptWindow.renamingMethod.renameNamePxs.value) {
-        //$.writeln('Method: name+px');
-        //for (var i = 0; i < doc.artboards.length; i++) {
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
             var rectArray = doc.artboards[index].artboardRect;
@@ -163,3 +141,27 @@ function applyMethod() {
         };
     promptWindow.hide();
 };
+
+function printVariables(where, line) {
+    $.writeln('snapshot of variables at the location: '+where);
+    $.writeln('snapshot of variables at the line: '+line);
+    $.writeln('doc = '+doc);
+    $.writeln('docName = '+docName);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('versionNumber = '+versionNumber);
+    $.writeln('allRange = '+allRange);
+    $.writeln('rangeInputText = '+rangeInputText);
+    $.writeln('promptWindow = '+promptWindow);
+    $.writeln('prefixName = '+prefixName);
+    $.writeln('commaArray = '+commaArray);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+    $.writeln('delimiter = '+delimiter);
+}
