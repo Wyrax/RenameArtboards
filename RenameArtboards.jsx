@@ -8,7 +8,7 @@ if (app.documents.length == 0) {
     var docName;
     var delimiter;
     var allRange = doc.artboards.length;
-    var rangeInputText = '1-'+allRange;
+    var rangeInputText = '1-' + allRange;
     var promptWindow = new Window('dialog', 'Rename Artboards Options:');
     //promptWindow.location = [250,250];
     //promptWindow.size = [1000,1200];
@@ -18,10 +18,10 @@ if (app.documents.length == 0) {
     promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [20,20,170,39], 'Include file name');
     promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.'; 
     promptWindow.includeFileName.fileNameCheckbox.value = true;
-    promptWindow.includeFileName.orientation='column';
+    promptWindow.includeFileName.orientation = 'column';
 
     promptWindow.renamingMethod = promptWindow.add('panel', undefined, 'Renaming Method:');
-    promptWindow.renamingMethod.orientation='column';
+    promptWindow.renamingMethod.orientation = 'column';
     promptWindow.renamingMethod.renameSame = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'All the same');
     promptWindow.renamingMethod.renameSame.helpTip = 'Rename all artboards\nthe same as file name.';
     promptWindow.renamingMethod.renameNameNumber = promptWindow.renamingMethod.add('radiobutton', [20,20,170,35], 'Add number');
@@ -35,7 +35,7 @@ if (app.documents.length == 0) {
     //Applied Range
     promptWindow.range = promptWindow.add('panel', undefined, 'Range of artboards:');
     promptWindow.range.helpTip = 'Specify ranges by hyphen\nor separate artboards by commas.'; 
-    promptWindow.range.orientation='row';
+    promptWindow.range.orientation = 'row';
     promptWindow.range.selectAll = promptWindow.range.add('radiobutton', [15,15,65,35], 'All');
     promptWindow.range.selectAll.helpTip = 'Rename all artboards.';
     promptWindow.range.selectRange = promptWindow.range.add('radiobutton', [15,15,75,35], 'Range:');
@@ -51,7 +51,7 @@ if (app.documents.length == 0) {
     promptWindow.version.helpTip = 'copyleft';
 
     promptWindow.confirmation = promptWindow.add('group', undefined, 'Rename confirmation');
-    promptWindow.confirmation.orientation='row';
+    promptWindow.confirmation.orientation = 'row';
     promptWindow.confirmation.cancelButton = promptWindow.confirmation.add('button', undefined, 'Cancel', {name:'cancel'});
     promptWindow.confirmation.renameButton = promptWindow.confirmation.add('button', undefined, 'Rename', {name:'ok'});
 
