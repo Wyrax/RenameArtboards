@@ -3,12 +3,13 @@
 if (app.documents.length == 0) {
     alert('Open document first.');
 } else {
-    var versionNumber = 'Version 0.88';
+    var versionNumber = 'Version 0.9';
     var doc = app.activeDocument;
     var docName;
     var delimiter;
     var allRange = doc.artboards.length;
     var rangeInputText = '1-' + allRange;
+    var protectedLocale = '';
     var promptWindow = new Window('dialog', 'Rename Artboards Options:');
     //promptWindow.location = [250,250];
     //promptWindow.size = [1000,1200];
@@ -16,9 +17,18 @@ if (app.documents.length == 0) {
 
     promptWindow.includeFileName = promptWindow.add('panel', undefined, 'Filename:');
     promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [20,20,170,39], 'Include file name');
-    promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.'; 
+    promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.';
     promptWindow.includeFileName.fileNameCheckbox.value = true;
     promptWindow.includeFileName.orientation = 'column';
+
+    promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language suffixes:');
+    promptWindow.protectLocales.uaCheckbox = promptWindow.protectLocales.add('checkbox', [20,0,170,15], 'ua and ukr');
+    promptWindow.protectLocales.uaCheckbox.helpTip = 'Protecting ua, -ua, _ua, ukr, -ukr and _ukr strings.';
+    promptWindow.protectLocales.uaCheckbox.value = true;
+    promptWindow.protectLocales.ruCheckbox = promptWindow.protectLocales.add('checkbox', [20,0,170,15], 'ru and rus');
+    promptWindow.protectLocales.ruCheckbox.helpTip = 'Protecting ru, -ru, _ru, rus, -rus and _rus strings.';
+    promptWindow.protectLocales.ruCheckbox.value = true;
+    promptWindow.protectLocales.orientation = 'column';
 
     promptWindow.renamingMethod = promptWindow.add('panel', undefined, 'Renaming Method:');
     promptWindow.renamingMethod.orientation = 'column';
@@ -107,13 +117,19 @@ function applyMethod() {
     if (promptWindow.renamingMethod.renameSame.value) {
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
-            doc.artboards[index].name = docName;
-            };
+            if (docName == 'My name is Legion, for we are many >:)') {
+                doc.artboards[index].name = docName;
+            } else {
+                protectedLocale = protectLocales(doc.artboards[index].name);
+                doc.artboards[index].name = docName + protectedLocale;
+            }
         };
+    };
     if (promptWindow.renamingMethod.renameNameNumber.value) {
         for (var r in unpackedRangeArray) {
             var index = unpackedRangeArray[r];
-            doc.artboards[index].name = docName+delimiter+(index+1);
+            protectedLocale = protectLocales(doc.artboards[index].name);
+            doc.artboards[index].name = docName + delimiter + (index+1) + protectedLocale;
             };
         };
     if (promptWindow.renamingMethod.renameNameMms.value) {
@@ -124,7 +140,8 @@ function applyMethod() {
             var heightPts = (rectArray[3] - rectArray[1]) * -1;
             var widthMms = Math.round(new UnitValue(widthPts, 'pt').as('mm'));
             var heightMms = Math.round(new UnitValue(heightPts, 'pt').as('mm'));
-            doc.artboards[index].name = docName+delimiter+widthMms+'x'+heightMms+'mm';
+            protectedLocale = protectLocales(doc.artboards[index].name);
+            doc.artboards[index].name = docName + delimiter + widthMms + 'x' + heightMms + 'mm' + protectedLocale;
             };
         };
     if (promptWindow.renamingMethod.renameNamePxs.value) {
@@ -135,8 +152,37 @@ function applyMethod() {
             var heightPts = (rectArray[3] - rectArray[1]) * -1;
             var widthPxs = Math.round(new UnitValue(widthPts, 'pt').as('px'));
             var heightPxs = Math.round(new UnitValue(heightPts, 'pt').as('px'));
-            doc.artboards[index].name = docName+delimiter+widthPxs+'x'+heightPxs+'px';
+            protectedLocale = protectLocales(doc.artboards[index].name);
+            doc.artboards[index].name = docName + delimiter + widthPxs + 'x' + heightPxs + 'px' + protectedLocale;
             };
         };
     promptWindow.hide();
 };
+
+function protectLocales(artboardName) {
+    var protectedMatch;
+    if (promptWindow.protectLocales.uaCheckbox.value && promptWindow.protectLocales.ruCheckbox.value) {
+        protectedMatch = artboardName.match(/\s?-?_?ua|ua$|\s?-?_?ukr|ukr$|\s?-?_?rus|rus$|\s?-?_?ru|ru$/i);
+        protectedMatch = checkNullUndefined(protectedMatch);
+        return protectedMatch;
+    }
+    if (promptWindow.protectLocales.uaCheckbox.value) {
+        protectedMatch = artboardName.match(/\s?-?_?ua|ua$|\s?-?_?ukr|ukr$/i);
+        protectedMatch = checkNullUndefined(protectedMatch);
+        return protectedMatch;
+    }
+    if (promptWindow.protectLocales.ruCheckbox.value) {
+        protectedMatch = artboardName.match(/\s?-?_?rus|rus$|\s?-?_?ru|ru$/i);
+        protectedMatch = checkNullUndefined(protectedMatch);
+        return protectedMatch;
+    }
+    protectedMatch = checkNullUndefined(protectedMatch);
+    return protectedMatch;
+
+    function checkNullUndefined(checkedVariable) {
+        if (checkedVariable === null || checkedVariable === undefined) {
+            checkedVariable = '';
+        }
+        return checkedVariable;
+    }
+}
