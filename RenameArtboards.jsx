@@ -21,7 +21,7 @@ if (app.documents.length == 0) {
     promptWindow.includeFileName.fileNameCheckbox.value = true;
     promptWindow.includeFileName.orientation = 'column';
 
-    promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language identificators:');
+    promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language tags:');
     promptWindow.protectLocales.uaCheckbox = promptWindow.protectLocales.add('checkbox', [20,0,170,15], 'ua and ukr');
     promptWindow.protectLocales.uaCheckbox.helpTip = 'Protecting ua, -ua, _ua, ukr, -ukr and _ukr strings.';
     promptWindow.protectLocales.uaCheckbox.value = true;

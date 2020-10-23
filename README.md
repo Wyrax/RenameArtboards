@@ -15,4 +15,4 @@ Renaming can be applied to all artboards or to the range.
 
 Range can be specified by multiple dashes, e.g.  1, 3-5-7, 11, 14-17.
 
-If an artboard name before renaming has the local language identificator string (-ua/_ukr/ ru/rus etc.) it can be included in the new artboard name by choosing apropriate checkboxes in "Protect language identificators" group.
+If an artboard name before renaming has the local language identificator tag (-ua/_ukr/ ru/rus etc.) it can be included in the new artboard name by choosing apropriate checkboxes in "Protect language tags" group.
