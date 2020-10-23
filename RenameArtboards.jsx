@@ -3,7 +3,7 @@
 if (app.documents.length == 0) {
     alert('Open document first.');
 } else {
-    var versionNumber = 'Version 0.9';
+    var versionNumber = 'Version 0.91';
     var doc = app.activeDocument;
     var docName;
     var delimiter;
@@ -21,7 +21,7 @@ if (app.documents.length == 0) {
     promptWindow.includeFileName.fileNameCheckbox.value = true;
     promptWindow.includeFileName.orientation = 'column';
 
-    promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language suffixes:');
+    promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language identificators:');
     promptWindow.protectLocales.uaCheckbox = promptWindow.protectLocales.add('checkbox', [20,0,170,15], 'ua and ukr');
     promptWindow.protectLocales.uaCheckbox.helpTip = 'Protecting ua, -ua, _ua, ukr, -ukr and _ukr strings.';
     promptWindow.protectLocales.uaCheckbox.value = true;
