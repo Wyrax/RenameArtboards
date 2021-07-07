@@ -3,9 +3,11 @@
 if (app.documents.length == 0) {
     alert('Open document first.');
 } else {
-    var versionNumber = 'Version 0.91';
+    var versionNumber = 'Version 0.92';
     var doc = app.activeDocument;
+    var prefix;
     var docName;
+    var suffix;
     var delimiter;
     var allRange = doc.artboards.length;
     var rangeInputText = '1-' + allRange;
@@ -15,11 +17,19 @@ if (app.documents.length == 0) {
     //promptWindow.size = [1000,1200];
     //[startX, StartY, EndX, EndY]
 
+    promptWindow.prefix = promptWindow.add('panel', undefined, 'Add prefix text:');
+    promptWindow.prefix.prefixInput = promptWindow.prefix.add('edittext', [20,20,170,39]);
+    promptWindow.prefix.helpTip = 'Specify prefix\nto include before file name.';
+
     promptWindow.includeFileName = promptWindow.add('panel', undefined, 'Filename:');
     promptWindow.includeFileName.fileNameCheckbox = promptWindow.includeFileName.add('checkbox', [20,20,170,39], 'Include file name');
     promptWindow.includeFileName.fileNameCheckbox.helpTip = 'Include file name before.';
     promptWindow.includeFileName.fileNameCheckbox.value = true;
     promptWindow.includeFileName.orientation = 'column';
+    
+    promptWindow.suffix = promptWindow.add('panel', undefined, 'Add suffix text:');
+    promptWindow.suffix.suffixInput = promptWindow.suffix.add('edittext', [20,20,170,39]);
+    promptWindow.suffix.helpTip = 'Specify suffix\nto include after file name.';
 
     promptWindow.protectLocales = promptWindow.add('panel', undefined, 'Protect language tags:');
     promptWindow.protectLocales.uaCheckbox = promptWindow.protectLocales.add('checkbox', [20,0,170,15], 'ua and ukr');
@@ -75,20 +85,46 @@ function doNothing() {
 };
 
 function setDocName() {
-    var prefixName;
+    var prefix = promptWindow.prefix.prefixInput.text;
+    var prefixDelimiter = (prefix !== '') ? '-' : '';
+    var fileName;
+    var suffix = promptWindow.suffix.suffixInput.text;
+    var suffixDelimiter = (suffix !== '') ? '-' : '';
+    
     if (promptWindow.includeFileName.fileNameCheckbox.value) {
-        prefixName = doc.name;
-        prefixName = prefixName.replace(/\..+$/, '');
+        fileName = doc.name;
+        fileName = fileName.replace(/\..+$/, '');
         delimiter = '-';
-        return prefixName;
-    } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameSame.value) {
-        prefixName = 'My name is Legion, for we are many >:)';
-        delimiter = '-';
-        return prefixName;
+        $.writeln('1st if');
+        return prefix + prefixDelimiter + fileName + suffixDelimiter + suffix;
+    } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameSame.value && prefix === '' && suffix === '') {
+        fileName = 'My name is Legion, for we are many >:)';
+        $.writeln('1st else if');
+        return fileName;
+     } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameNameNumber.value && prefix !== '' && suffix === '') {
+        fileName = '';
+        delimiter = (promptWindow.renamingMethod.renameSame.value) ? '' : '-';
+        $.writeln('2nd else if');
+        return prefix;
+    } else if (!promptWindow.includeFileName.fileNameCheckbox.value && promptWindow.renamingMethod.renameNameNumber.value && prefix === '' && suffix !== '') {
+        fileName = '';
+        delimiter = (promptWindow.renamingMethod.renameSame.value) ? '' : '-';
+        $.writeln('3rd else if');
+        return suffix; // + suffixDelimiter
     } else {
-        prefixName = '';
+        fileName = '';
+        if (promptWindow.renamingMethod.renameSame.value && prefix !== '' && suffix !== '') {
+            prefixDelimiter = '-';
+            suffixDelimiter = '';
+        }
+        if (promptWindow.renamingMethod.renameSame.value && ((prefix !== '' && suffix === '') || (prefix === '' && suffix !== '') ) ) {
+            prefixDelimiter = '';
+            suffixDelimiter = '';
+        }
         delimiter = '';
-        return prefixName;
+        $.writeln('last else');
+
+        return prefix + prefixDelimiter + suffix + suffixDelimiter;
     }
 }
 
